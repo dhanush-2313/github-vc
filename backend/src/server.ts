@@ -9,7 +9,7 @@ yargs(hideBin(process.argv))
   .command("init", "Initialize a new repo", {}, initRepo)
   .command(
     "add <file>",
-    "Add a file to the repo",
+    "Add a file to the repository",
     (yargs) => {
       yargs.positional("file", {
         describe: "File to add to the staging area",

@@ -1,1 +1,1 @@
-{"root":["./src/server.ts","./src/config/awsconfig.ts","./src/controllers/add.ts","./src/controllers/commit.ts","./src/controllers/init.ts","./src/controllers/pull.ts","./src/controllers/push.ts","./src/controllers/revert.ts"],"version":"5.6.3"}
+{"root":["./src/index.ts","./src/config/awsconfig.ts","./src/controllers/add.ts","./src/controllers/commit.ts","./src/controllers/init.ts","./src/controllers/pull.ts","./src/controllers/push.ts","./src/controllers/revert.ts"],"version":"5.6.3"}

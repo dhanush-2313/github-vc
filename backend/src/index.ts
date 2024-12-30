@@ -1,4 +1,3 @@
-import express from "express";
 import yargs, { demandCommand } from "yargs";
 import { hideBin } from "yargs/helpers";
 import { initRepo } from "./controllers/init";
@@ -8,7 +7,6 @@ import { pushRepo } from "./controllers/push";
 import { pullRepo } from "./controllers/pull";
 import { revertRepo } from "./controllers/revert";
 
-const app = express();
 yargs(hideBin(process.argv))
   .command("init", "Initialize a new repo", {}, initRepo)
   .command(
@@ -20,7 +18,9 @@ yargs(hideBin(process.argv))
         type: "string",
       });
     },
-    addRepo
+    (argv) => {
+      addRepo(argv.file as string);
+    }
   )
   .command(
     "commit message",
@@ -48,5 +48,3 @@ yargs(hideBin(process.argv))
   )
   .demandCommand(1, "You need atleast one command")
   .help().argv;
-
-app.listen(3000, () => {});

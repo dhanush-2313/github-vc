@@ -3,8 +3,9 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-AWS.config.update({ region: "eu-north-1" });
+AWS.config.update({ region: "ap-south-1" });
 
-export const s3 = new AWS.S3();
+const s3 = new AWS.S3();
+const s3Bucket = process.env.S3_BUCKET;
 
-export const s3Bucket = process.env.S3_BUCKET;
+export { s3, s3Bucket };

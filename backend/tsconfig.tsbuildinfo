@@ -1,1 +1,1 @@
-{"root":["./src/index.ts","./src/config/awsConfig.ts","./src/controllers/add.ts","./src/controllers/commit.ts","./src/controllers/init.ts","./src/controllers/pull.ts","./src/controllers/push.ts","./src/controllers/revert.ts"],"version":"5.6.2"}
+{"root":["./src/index.ts","./src/config/awsConfig.ts","./src/controllers/add.ts","./src/controllers/commit.ts","./src/controllers/init.ts","./src/controllers/pull.ts","./src/controllers/push.ts","./src/controllers/revert.ts","./src/middleware/authMiddleware.ts","./src/middleware/authorizeMiddleware.ts"],"version":"5.6.2"}

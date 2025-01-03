@@ -6,8 +6,48 @@ import { commitRepo } from "./controllers/commit";
 import { pushRepo } from "./controllers/push";
 import { pullRepo } from "./controllers/pull";
 import { revertRepo } from "./controllers/revert";
+import http from "http";
+import express from "express";
+import { Server } from "socket.io";
+import cors from "cors";
+
+
+const startServer = () => {
+  const app = express();
+  const port = process.env.PORT || 3000;
+
+  app.use(cors({ origin: "*" }));
+  app.use(express.json());
+
+  app.get("/", (req, res) => {
+    res.send("Welcome ");
+  })
+
+  let user = "test";
+  const httpServer = http.createServer(app);
+  const io = new Server(httpServer, {
+    cors: { origin: "*", methods: ["GET", "POST"] }
+  })
+
+  io.on("connection", (socket) => {
+    socket.on("joinRoom", (userId) => {
+      user = userId;
+      console.log("===");
+      console.log(user);
+      console.log("===");
+      socket.join(user);
+    })
+  });
+
+  httpServer.listen(port, () => {
+    console.log(`Server is running on http://localhost:${port}`);
+  })
+
+
+}
 
 yargs(hideBin(process.argv))
+  .command("start", "Starts a new server", {}, startServer)
   .command("init", "Initialize a new repo", {}, initRepo)
   .command(
     "add <file>",
@@ -48,3 +88,4 @@ yargs(hideBin(process.argv))
   )
   .demandCommand(1, "You need atleast one command")
   .help().argv;
+

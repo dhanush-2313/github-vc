@@ -1,0 +1,80 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum IssueStatus {
+  open
+  closed
+}
+
+model User {
+  id            Int                @id @default(autoincrement())
+  username      String             @unique
+  email         String             @unique
+  password      String?
+  repositories  UserRepositories[]
+  followedUsers UserFollows[]      @relation("UserFollows_Follower")
+  following     UserFollows[]      @relation("UserFollows_Followed")
+  starRepos     UserStars[]
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
+  ownedRepos    Repository[]       @relation("UserOwnedRepos")
+}
+
+model Repository {
+  id           Int                @id @default(autoincrement())
+  name         String             @unique
+  description  String?
+  content      String[]
+  visibility   Boolean?
+  ownerId      Int
+  owner        User               @relation(fields: [ownerId], references: [id], name: "UserOwnedRepos")
+  issues       Issue[]
+  stars        UserStars[]
+  contributors UserRepositories[]
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+}
+
+model Issue {
+  id           Int         @id @default(autoincrement())
+  title        String
+  description  String
+  status       IssueStatus @default(open)
+  repositoryId Int
+  repository   Repository  @relation(fields: [repositoryId], references: [id])
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+}
+
+model UserRepositories {
+  userId       Int
+  repositoryId Int
+  user         User       @relation(fields: [userId], references: [id])
+  repository   Repository @relation(fields: [repositoryId], references: [id])
+
+  @@id([userId, repositoryId])
+}
+
+model UserFollows {
+  followerId Int
+  followedId Int
+  follower   User @relation("UserFollows_Follower", fields: [followerId], references: [id])
+  followed   User @relation("UserFollows_Followed", fields: [followedId], references: [id])
+
+  @@id([followerId, followedId])
+}
+
+model UserStars {
+  userId       Int
+  repositoryId Int
+  user         User       @relation(fields: [userId], references: [id])
+  repository   Repository @relation(fields: [repositoryId], references: [id])
+
+  @@id([userId, repositoryId])
+}

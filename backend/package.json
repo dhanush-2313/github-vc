@@ -19,5 +19,8 @@
     "express": "^4.21.2",
     "uuid": "^11.0.3",
     "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "prisma": "^6.1.0"
   }
 }

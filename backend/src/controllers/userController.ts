@@ -9,7 +9,19 @@ const prisma = new PrismaClient();
 let secret = process.env.JWT_SECRET;
 
 const getAllUsers = async (req: Request, res: Response) => {
-    res.send("All users fetched")
+    try {
+        const users = await prisma.user.findMany({
+            include: {
+                followedUsers: true,
+                ownedRepos: true,
+                starRepos: true,
+            },
+        });
+        res.status(200).json(users)
+    } catch (error: any) {
+        console.error("Error while fetching all users", error.message)
+        res.status(500).json({ message: "Error while fetching all users" })
+    }
 }
 
 const signup = async (req: Request, res: Response) => {
@@ -55,15 +67,94 @@ const signup = async (req: Request, res: Response) => {
 }
 
 const login = async (req: Request, res: Response) => {
-    res.send("User logged in")
+    const { email, password } = req.body;
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                email
+            }
+        })
+        if (!user) {
+            res.status(400).json({ message: "User does not exist" })
+            return
+        }
+
+        const isMatch = await bcrypt.compare(password, user.password!);
+        if (!isMatch) {
+            res.status(400).json({ message: "Invalid credentials" })
+            return
+        }
+
+        const token = jwt.sign({ id: user.id }, secret!, { expiresIn: "1h" });
+        res.status(200).json({ token, userId: user.id })
+    } catch (error: any) {
+        console.error("Error while logging in user", error.message)
+        res.status(500).json({ message: "Error while logging in user" })
+    }
 }
 
 const getUser = async (req: Request, res: Response) => {
-    res.send("User profile fetched")
+    const currentUserID = req.params.userId;
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: parseInt(currentUserID)
+            },
+            include: {
+                followedUsers: true,
+                ownedRepos: true,
+                starRepos: true,
+            }
+        })
+        if (!user) {
+            res.status(404).json({ message: "User not found" })
+            return
+        }
+        res.status(200).json(user)
+    } catch (error: any) {
+        console.error("Error while fetching user", error.message)
+        res.status(500).json({ message: "Error while fetching user" })
+    }
+
 }
 
 const updateUser = async (req: Request, res: Response) => {
-    res.send("User profile updated")
+    const currentUserID = req.params.userId;
+    const { email, password } = req.body;
+    try {
+        const user = await prisma.user.findUnique({
+            where: {
+                id: parseInt(currentUserID)
+            }
+        });
+
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
+        let updateFields: any = {};
+        if (email) {
+            updateFields.email = email;
+        }
+        if (password) {
+            const salt = await bcrypt.genSalt(17);
+            const hashedPassword = await bcrypt.hash(password, salt);
+            updateFields.password = hashedPassword;
+        }
+
+        const result = await prisma.user.update({
+            where: {
+                id: parseInt(currentUserID)
+            },
+            data: updateFields
+        });
+
+        res.status(200).json(result);
+    } catch (error: any) {
+        console.error("Error while updating user", error.message);
+        res.status(500).json({ message: "Error while updating user" });
+    }
 }
 
 const deleteUser = async (req: Request, res: Response) => {

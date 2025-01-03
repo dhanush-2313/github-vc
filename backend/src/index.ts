@@ -1,11 +1,12 @@
 import yargs, { demandCommand } from "yargs";
 import { hideBin } from "yargs/helpers";
-import { initRepo } from "./controllers/init";
-import { addRepo } from "./controllers/add";
-import { commitRepo } from "./controllers/commit";
-import { pushRepo } from "./controllers/push";
-import { pullRepo } from "./controllers/pull";
-import { revertRepo } from "./controllers/revert";
+import { initRepo } from "./controllers/commands/init";
+import { addRepo } from "./controllers/commands/add";
+import { commitRepo } from "./controllers/commands/commit";
+import { pushRepo } from "./controllers/commands/push";
+import { pullRepo } from "./controllers/commands/pull";
+import { revertRepo } from "./controllers/commands/revert";
+import mainRouter from "./routes/main.router";
 import http from "http";
 import express from "express";
 import { Server } from "socket.io";
@@ -17,11 +18,8 @@ const startServer = () => {
   const port = process.env.PORT || 3000;
 
   app.use(cors({ origin: "*" }));
+  app.use("/", mainRouter);
   app.use(express.json());
-
-  app.get("/", (req, res) => {
-    res.send("Welcome ");
-  })
 
   let user = "test";
   const httpServer = http.createServer(app);

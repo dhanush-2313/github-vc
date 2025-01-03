@@ -12,6 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@prisma/client": "6.1.0",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.0",
     "@types/yargs": "^17.0.33",

@@ -1,6 +1,6 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { s3, s3Bucket } from "../config/awsConfig";
+import { s3, s3Bucket } from "../../config/awsConfig";
 
 export const pushRepo = async () => {
   const repoPath = path.resolve(process.cwd(), ".mygit");

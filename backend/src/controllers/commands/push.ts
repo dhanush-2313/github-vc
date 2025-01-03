@@ -1,6 +1,7 @@
 import { promises as fs } from "fs";
 import path from "path";
-import { s3, s3Bucket } from "../../config/awsConfig";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { s3Client, s3Bucket } from "../../config/awsConfig";
 
 export const pushRepo = async () => {
   const repoPath = path.resolve(process.cwd(), ".mygit");
@@ -22,7 +23,8 @@ export const pushRepo = async () => {
           Key: `commits/${commitDir}/${file}`,
           Body: fileContent,
         };
-        await s3.upload(params).promise();
+        const command = new PutObjectCommand(params);
+        await s3Client.send(command);
       }
     }
     console.log("Repo pushed successfully");

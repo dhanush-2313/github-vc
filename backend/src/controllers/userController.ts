@@ -150,7 +150,7 @@ const updateUser = async (req: Request, res: Response) => {
             data: updateFields
         });
 
-        res.status(200).json(result);
+        res.status(200).json({ message: "User updated successfully" });
     } catch (error: any) {
         console.error("Error while updating user", error.message);
         res.status(500).json({ message: "Error while updating user" });
@@ -158,7 +158,30 @@ const updateUser = async (req: Request, res: Response) => {
 }
 
 const deleteUser = async (req: Request, res: Response) => {
-    res.send("User deleted")
+    try {
+        const currentUserID = req.params.userId;
+        const user = await prisma.user.findUnique({
+            where: {
+                id: parseInt(currentUserID)
+            }
+        });
+
+        if (!user) {
+            res.status(404).json({ message: "User not found" });
+            return;
+        }
+
+        const result = await prisma.user.delete({
+            where: {
+                id: parseInt(currentUserID)
+            }
+        });
+
+        res.status(200).json({ message: "User deleted successfully" });
+    } catch (error: any) {
+        console.error("Error while deleting user", error.message);
+        res.status(500).json({ message: "Error while deleting user" });
+    }
 }
 
 export const userController = {

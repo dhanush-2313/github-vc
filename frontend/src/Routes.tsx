@@ -17,7 +17,7 @@ const AllRoutes = () => {
     }
     if (
       !userIdFromStorage &&
-      !["/auth", "signup"].includes(window.location.pathname)
+      !["/auth", "/signup"].includes(window.location.pathname)
     ) {
       navigate("/auth");
     }

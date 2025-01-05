@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import prisma from "../config/prismaClient";
 
-interface CustomRequest extends Request {
+export interface CustomRequest extends Request {
     user?: any;
 }
 

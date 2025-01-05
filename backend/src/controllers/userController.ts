@@ -3,9 +3,8 @@ dotenv.config();
 import { Request, Response } from "express"
 import jwt from "jsonwebtoken"
 import bcrypt from "bcryptjs"
-import { PrismaClient } from "@prisma/client"
+import prisma from "../config/prismaClient";
 
-const prisma = new PrismaClient();
 let secret = process.env.JWT_SECRET;
 
 const getAllUsers = async (req: Request, res: Response) => {

@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import prisma from '../config/prismaClient';
 
 const createIssue = async (req: Request, res: Response) => {
     res.send('Issue created');

@@ -57,7 +57,7 @@ const signup = async (req: Request, res: Response) => {
         })
 
         const token = jwt.sign({ id: newUser.id }, secret!, { expiresIn: "1h" });
-        res.status(201).json({ token })
+        res.status(201).json({ token, userId: newUser.id })
 
     } catch (error: any) {
         console.error("Error while signing up user", error.message)

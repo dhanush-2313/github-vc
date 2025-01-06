@@ -65,7 +65,7 @@ const fetchRepoById = async (req: Request, res: Response) => {
             res.status(404).json({ message: "Repo not found" });
             return;
         }
-        res.status(200).json(repo);
+        res.status(200).json({ repositories: repo });
 
     } catch (error: any) {
         console.error("Error while fetching repo by id", error.message);
@@ -99,8 +99,15 @@ const fetchRepoByName = async (req: Request, res: Response) => {
     }
 }
 
-const fetchRepoForCurrentUser = async (req: CustomRequest, res: Response) => {
-    const userId = req.user;
+const fetchRepoForCurrentUser = async (req: Request, res: Response) => {
+    const userId = req.params.userId;
+    console.log(userId);
+
+    if (!userId) {
+        res.status(400).json({ message: "User ID is required" });
+        return;
+    }
+
     try {
         const repos = await prisma.repository.findMany({
             where: {
@@ -110,19 +117,17 @@ const fetchRepoForCurrentUser = async (req: CustomRequest, res: Response) => {
                 owner: true,
                 issues: true
             }
-        })
+        });
         if (!repos || repos.length === 0) {
             res.status(404).json({ message: "Repos not found" });
             return;
         }
 
-        res.status(200).json({ message: "User repos found ", repos });
+        res.status(200).json({ message: "User repos found", repositories: repos });
     } catch (error: any) {
         console.error("Error while fetching repo by id", error.message);
         res.status(500).json({ message: "Error while fetching repo by id" });
-
     }
-
 }
 
 const updateRepoById = async (req: Request, res: Response) => {

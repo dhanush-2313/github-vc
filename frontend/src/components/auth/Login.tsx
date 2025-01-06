@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../../authContext";
 
@@ -13,14 +13,21 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const { setCurrentUser } = useAuth();
+  const { currentUser, setCurrentUser } = useAuth();
+
+  useEffect(() => {
+    const userIdFromStorage = localStorage.getItem("userId");
+    if (userIdFromStorage && !currentUser) {
+      setCurrentUser(userIdFromStorage);
+    }
+  }, []);
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
 
     try {
       setLoading(true);
-      const res = await axios.post("http://localhost:3002/login", {
+      const res = await axios.post("http://localhost:3000/login", {
         email: email,
         password: password,
       });

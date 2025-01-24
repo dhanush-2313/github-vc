@@ -6,6 +6,9 @@ import Profile from "./components/user/Profile";
 import Login from "./components/auth/Login";
 import Signup from "./components/auth/Signup";
 
+//add route protection using context
+
+
 const AllRoutes = () => {
   const { currentUser, setCurrentUser } = useAuth()!;
   const navigate = useNavigate();

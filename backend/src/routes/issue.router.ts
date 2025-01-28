@@ -9,6 +9,7 @@ issueRouter.delete("/issue/delete/:id", issueController.deleteIssue);
 issueRouter.get("/issue/all", issueController.getAllIsuues);
 issueRouter.get("/issue/:id", issueController.getIssueById);
 
+
 export default issueRouter;
 
 
